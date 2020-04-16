@@ -9,9 +9,9 @@ module.exports = {
     siteTitleAlt: `Today I Learnt`,
     siteUrl: 'https://today-i-learnt.netlify.app',
     siteDescription: 'Today what I learnt',
-    siteLanguage:  'en',
+    siteLanguage: 'en',
     siteImage: '',
-    author:  'Various'
+    author: 'Various'
   },
   plugins: [
     {
@@ -53,6 +53,13 @@ module.exports = {
     },
     `gatsby-plugin-offline`,
     `gatsby-plugin-netlify`,
-    // `gatsby-plugin-webpack-bundle-analyser-v2`,
+    `gatsby-transformer-yaml`,
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        path: `./data/authors`,
+        typeName: `Author`
+      },
+    },
   ],
 }
