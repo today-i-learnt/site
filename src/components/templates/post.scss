@@ -1,0 +1,20 @@
+.post {
+  article {
+  }
+  .author-info {
+    h6 {
+      text-transform: uppercase;
+      margin-bottom: 0;
+    }
+
+    .copyright {
+      font-size: 0.75rem;
+    }
+  }
+
+  .content {
+    a {
+      color: #0288d1;
+    }
+  }
+}

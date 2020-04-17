@@ -1,0 +1,60 @@
+$width-md: 640px;
+$width-lg: 48rem;
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+
+  @media (min-width: $width-lg) {
+    font-size: 1.25rem;
+  }
+}
+
+body {
+  font-family: 'IBM Plex Mono', 'Courier New', Courier, monospace;
+  display: flex;
+  flex-direction: column;
+}
+
+.heading {
+  font-family: 'IBM Plex Serif', Georgia, 'Times New Roman', Times, serif;
+
+  a, a:hover {
+    text-decoration: none;
+  }
+}
+
+/* Global styles */
+
+a {
+  text-decoration: none;
+  color: inherit;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+header,
+main,
+footer {
+  max-width: 64rem;
+  margin: 1rem;
+
+  @media (min-width: $width-md) {
+    margin: 2rem;
+  }
+
+  @media (min-width: $width-lg) {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* utitily classes */
+
+.secondary {
+  color: rgb(95, 108, 128);
+  font-size: 0.9em;
+}

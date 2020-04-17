@@ -1,65 +1,56 @@
-require(`dotenv`).config({
-  path: `.env`,
-})
-
 module.exports = {
   siteMetadata: {
-    siteTitle: 'Today I Learnt',
-    siteHeadline: 'A diary of what we learnt today!',
-    siteTitleAlt: `Today I Learnt`,
-    siteUrl: 'https://today-i-learnt.netlify.app',
-    siteDescription: 'Today what I learnt',
-    siteLanguage: 'en',
-    siteImage: '',
-    author: 'Various'
+    title: `Today I Learnt`,
+    description: `What did I learn today?`,
   },
   plugins: [
-    {
-      resolve: `@lekoarts/gatsby-theme-minimal-blog`,
-      options: {
-        formatString: `YYYY-MM-DD`
-      },
-    },
-    {
-      resolve: `gatsby-plugin-google-analytics`,
-      options: {
-        trackingId: process.env.GOOGLE_ANALYTICS_ID,
-      },
-    },
-    `gatsby-plugin-sitemap`,
-    {
-      resolve: `gatsby-plugin-manifest`,
-      options: {
-        name: `minimal-blog - @lekoarts/gatsby-theme-minimal-blog`,
-        short_name: `today-i-learnt`,
-        description: `Byte-sized diary about what we learnt today!`,
-        start_url: `/`,
-        background_color: `#fff`,
-        theme_color: `#6B46C1`,
-        display: `standalone`,
-        icons: [
-          {
-            src: `/android-chrome-192x192.png`,
-            sizes: `192x192`,
-            type: `image/png`,
-          },
-          {
-            src: `/android-chrome-512x512.png`,
-            sizes: `512x512`,
-            type: `image/png`,
-          },
-        ],
-      },
-    },
-    `gatsby-plugin-offline`,
-    `gatsby-plugin-netlify`,
-    `gatsby-transformer-yaml`,
+    'gatsby-plugin-sass',
+    'gatsby-plugin-typescript',
+    `gatsby-plugin-react-helmet`,
     {
       resolve: `gatsby-source-filesystem`,
       options: {
-        path: `./data/authors`,
-        typeName: `Author`
+        name: `images`,
+        path: `${__dirname}/src/images`,
       },
     },
+    `gatsby-transformer-sharp`,
+    `gatsby-plugin-sharp`,
+    {
+      resolve: `gatsby-plugin-manifest`,
+      options: {
+        name: `gatsby-starter-default`,
+        short_name: `starter`,
+        start_url: `/`,
+        background_color: `#663399`,
+        theme_color: `#663399`,
+        display: `minimal-ui`,
+        icon: `src/images/gatsby-icon.png`, // This path is relative to the root of the site.
+      },
+    },
+    'gatsby-plugin-mdx',
+    {
+      resolve: 'gatsby-source-filesystem',
+      options: {
+        typeName: 'Post',
+        name: 'posts',
+        path: `${__dirname}/content/posts/`,
+      },
+    },
+    'gatsby-transformer-yaml',
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        path: `${__dirname}/data/authors/`,
+        typeName: 'Author',
+      },
+    },
+    {
+      resolve: 'gatsby-plugin-google-fonts',
+      options: {
+        fonts: ['IBM Plex Serif','IBM Plex Mono'],
+        display: 'swap'
+      }
+    }
   ],
 }
