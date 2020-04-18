@@ -6,7 +6,6 @@ import { Post } from '../../models'
 
 import './blog-list-item.scss'
 
-
 type Props = {
   post: Post
 }

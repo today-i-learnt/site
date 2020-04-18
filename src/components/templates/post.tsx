@@ -51,8 +51,7 @@ export default function PostTemplate({ data: { post, author } }: PostProps) {
         <div className="author-name">{author.name}</div>
         <p className="author-bio">{author.bio}</p>
         <p className="copyright secondary">
-          <Copyright name={author.name} /> Content available
-          under CC-BY 4.0
+          <Copyright name={author.name} /> Content available under CC-BY 4.0
         </p>
       </section>
     </Layout>

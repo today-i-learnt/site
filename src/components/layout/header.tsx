@@ -10,12 +10,12 @@ const Header = () => {
 
   return (
     <header>
-        <h1 className="heading">
-          <Link to="/" title={`${title} - Back to home`}>
-            {title}
-          </Link>
-        </h1>
-        {/* <ColorModeToggle isDark={isDark} toggle={toggleColorMode} /> */}
+      <h1 className="heading">
+        <Link to="/" title={`${title} - Back to home`}>
+          {title}
+        </Link>
+      </h1>
+      {/* <ColorModeToggle isDark={isDark} toggle={toggleColorMode} /> */}
     </header>
   )
 }

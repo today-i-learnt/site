@@ -9,12 +9,7 @@ type Props = {
   text: string
 }
 
-export default function Title({
-  text,
-  children,
-  as = `h2`,
-  className,
-}: Props) {
+export default function Title({ text, children, as = `h2`, className }: Props) {
   return (
     <div className="title">
       <h2>{text}</h2>

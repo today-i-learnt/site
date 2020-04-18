@@ -3,7 +3,6 @@ import React from 'react'
 import BlogListItem from './blog-list-item'
 import { Post } from '../../models'
 
-
 type Props = {
   posts: Post[]
   className?: string
