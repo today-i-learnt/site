@@ -1,0 +1,124 @@
+---
+title: "Golang's Closures Can Shoot You In The Foot"
+date: '2020-04-18T11:04:15.360Z'
+author: 'amitosh'
+---
+
+Golang's closures are undoubtedly very helpful but can behave weird at
+times.
+
+## Closures
+
+Any inline function that references variables from outside its body is a closure.
+Here's a trivial example of a "higher-order function" (func returning func),
+using a closure
+
+```go
+
+type StrFunc func (input string) string
+
+func PrefixWith(prefix string) StrFunc {
+    return func(input string) {
+        return prefix + input
+    }
+}
+```
+
+If you are writing enough Go code, you will find yourself using closures
+somewhere or the other. However, while using them, there are several gotchas's
+that you must keep in mind.
+
+## Closure over loop variables
+
+Let's say we are doing some crazy stuff like:
+
+```go
+func main() {
+    done := make(chan bool)
+
+    values := []string{"a", "b", "c"}
+    for _, v := range values {
+        go func() {
+            fmt.Println(v)
+            done <- true
+        }()
+    }
+
+    // wait for all goroutines to complete before exiting
+    for _ = range values {
+        <-done
+    }
+}
+```
+
+You may expect an output like:
+
+```
+a
+b
+c
+```
+
+While it will be:
+
+```
+c
+c
+c
+```
+
+This is because closures capture variables by reference and by the time the
+goroutines run, the value of `v` is `c`
+
+To prevent this from happening, explicitly capture the value of `v`. This will
+give the desired output
+
+```go
+
+func main() {
+    done := make(chan bool)
+
+    values := []string{"a", "b", "c"}
+    for _, v := range values {
+        go func(v string) {
+            fmt.Println(v)
+            done <- true
+        }(v)
+    }
+
+    // wait for all goroutines to complete before exiting
+    for _ = range values {
+        <-done
+    }
+}
+```
+
+## Race conditions
+
+If two goroutines refer a variable through closure captures, you can very easily
+end up with race conditions. Consider some code like this:
+
+```go
+type Record struct {
+    name string
+    value int
+}
+
+func doSomeWorkParallely() {
+    tempRecord := Record{
+        name: 'Temp'
+        value: 1
+    }
+    data := dataFromService()
+    for _, record in range data {
+        go func() {
+            // ...
+            tempRecord.name = record.SomeValue
+            tempRecord.value = record.SomeIntValue
+        }()
+    }
+}
+```
+
+Such code is dangerous and you can easily end up with `tempRecord` being in an
+inconsistent state. You can use a `Mutex` to synchronize the access but should you?
