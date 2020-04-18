@@ -13,4 +13,5 @@ Theme based on: [Minimal Blog by LekoArts](https://minimal-blog.lekoarts.de)
 
 ## Adding content
 
-Add a new page of MDX inside `content`
+Run `yarn new:post` to create a new blank post. Edit and push your changes to
+publish

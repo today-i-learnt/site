@@ -19,10 +19,12 @@
     "gatsby-transformer-sharp": "^2.4.3",
     "gatsby-transformer-yaml": "^2.3.2",
     "node-sass": "^4.13.1",
+    "prompts": "^2.3.2",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "react-helmet": "^6.0.0"
+    "react-helmet": "^6.0.0",
+    "yaml": "^1.9.0"
   },
   "devDependencies": {
     "prettier": "2.0.4"
@@ -38,7 +40,7 @@
     "start": "npm run develop",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
-    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1"
+    "new:post": "node scripts/new-post.js"
   },
   "version": "1.0.0",
   "repository": "git@github.com:today-i-learnt/today-i-learnt.github.io.git",
