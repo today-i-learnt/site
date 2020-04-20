@@ -1,0 +1,47 @@
+---
+title: 'Docker on mac vs linux'
+date: '2020-04-20T16:32:42.545Z'
+author: 'nancy'
+---
+Docker is different on Mac and Linux systems. Docker directly leverages the kernel of the host system on Linux. On the other hand, Mac does not provide a Linux kernel, so Docker runs on a small Linux VM running on a mac. Due to this, there are many differences. 
+
+## Cannot access container IPs directly
+
+On Linux let's try to inspect a running docker image : 
+
+```
+ubuntu@primary:~$ sudo docker ps
+CONTAINER ID        IMAGE               COMMAND              CREATED             STATUS              PORTS               NAMES
+a230855dd7d2        httpd               "httpd-foreground"   17 seconds ago      Up 16 seconds       80/tcp              determined_saha
+ubuntu@primary:~$ sudo docker inspect determined_saha
+
+```
+
+Let's curl the IP : 
+
+```
+                   "IPAddress": "172.17.0.2",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "MacAddress": "02:42:ac:11:00:02",
+                    "DriverOpts": null
+                }
+            }
+        }
+    }
+]
+ubuntu@primary:~$ curl 172.17.0.2
+<html><body><h1>It works!</h1></body></html>
+
+```
+
+However on mac when hitting the IP address of the container we get : 
+
+```
+➜ curl 172.17.0.3
+curl: (7) Failed to connect to 172.17.0.3 port 80: Operation timed out
+
+```
+Curl times out because the container is running inside the VM and not sharing the network with the mac.
