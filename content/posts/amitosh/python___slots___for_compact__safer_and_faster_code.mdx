@@ -1,0 +1,49 @@
+---
+title: 'Python __slots__ for Compact, Safer and Faster Code'
+date: '2020-04-21T16:35:35.122Z'
+author: 'amitosh'
+---
+
+Setting `__slots__` in your Python class can have significant gains in speed
+and memory usage.
+
+Python classes consists a magic attribute called `__slots__` &mdash; this
+defines the attributes that an instance of the defining class can hold.
+
+Python is a dynamic language so normally you can set any attribute to any object
+as opposed to a static language like Java where you need to define a field
+explicitly before setting any value. But this dynamic behaviour comes at a cost.
+All Python objects are essentially a wrapper over a `dict` (the `__dict__`
+attribute). This makes attribute access a lot slower and since we hold additional
+baggage capacity, it makes object sizes grow to enormous amounts.
+
+By defining [slots][1] you trade the dynamic behaviour for much faster access and
+smaller memory requirements. Attributes are now directly stored in dedicated
+slots instead of `__dict__` and can be directly accessed.
+
+```python
+
+class Product(object):
+    __slots__ = ['name', 'price']
+
+    def __init(self, name:str, price:int):
+        self.name = name
+        self.price = price
+
+    # ...
+```
+
+Let the lack of dynamic capabilities not scare you. _You are already writing
+good code right?_ You should ideally not be adding attributes to objects during
+runtime. A majority of the time this is true.
+
+If you are using `mypy` or `pyre` then using slots will enforce an additional layer of safety.
+
+## Disadvantages
+
+> Noting is free
+
+Slots, other than eliminating dynamic attributes, also make it impossible for
+you to perform multiple inheritances without any of the parents having free slots.
+
+[1]: http://python-history.blogspot.com/2010/06/inside-story-on-new-style-classes.html
