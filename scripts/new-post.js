@@ -59,7 +59,7 @@ async function main() {
       type: 'text',
       name: 'title',
       message: 'Post title:',
-      initial: 'My New Post',
+      initial: process.argv[2] || 'My New Post',
     },
     {
       type: 'text',
