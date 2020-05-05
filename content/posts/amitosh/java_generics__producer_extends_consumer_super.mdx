@@ -1,0 +1,110 @@
+---
+title: 'Java Generics: Producer Extends Consumer Super'
+date: '2020-05-01T06:39:25.390Z'
+author: 'amitosh'
+---
+
+I do quite a lot of Java as part of the work I do at Gojek and one of the most
+helpful, but at times confusing part of the language is generics. Here I will be
+mentioning an interesting concept I recently came across -- PECS or "Producer
+Extends, Consumer Super"
+
+Generics in Java is invariant by default and is applied at compile-time. [Polymorphic][1]
+type agruments do not imply polymorphism in generic types i.e, You cannot assign
+`List<String>` to `List<CharSequence>`.
+
+However, with `extends` and `super` you achieve "covariance" and "contra-variance"
+that aids in desigining type-safe generic code aware of inheritance and polymorphism.
+
+This is useful in defining methods that accept collection types.
+
+- Use `? extends T` when the collection is "producing" items that you utilize. Like,
+  iterating over all items of the collection. You only care if the items in list are
+  compatible with `T` (i.e, sub-classes of `T`). This is covariance -- narrowing of
+  scope.
+- Use `super` when collection is "comnsuming" items. Like, an `copyToList` method
+  that copies current results into a list which allows you to store objects of type
+  `T`. This is contra-variance -- widening of scope.
+
+## Example
+
+## ? extends T -- covariance
+
+You need to apply a `List` of `Rule` over a state machine. Here the `List` is a
+"producer".
+
+```java
+interface Rule {
+    void apply(StateMachine m);
+}
+
+class FireWallRule implements Rule {
+    // ...
+}
+
+class StateMachine {
+    // ...
+    public void apply(List<? extends Rule> rules) {
+        // ...
+    }
+}
+
+class Main {
+    public static void main(String[] args) {
+        var m = new StateMachine();
+
+        var rules = List.of(
+            new FireWallRule(),
+             // ...
+        );
+
+        m.apply(rules);
+    }
+}
+```
+
+This allows you to pass a `List` of any objects which are implementations of `Rule`
+
+## ? super T -- contra-variance
+
+You need to store `FetchResult`s, a sub-type of `Result` into a `List`. Here the
+`List` is a "consumer".
+
+```java
+interface Result {
+    // ...
+}
+
+interface FetchResult extends Result {
+    // ...
+}
+
+class Fetcher {
+    putResult(List<? super FetchResult> output) {
+        // ...
+    }
+}
+
+class Main {
+    public static void main(String[] args) {
+        var result = new ArrayList<Result>();
+        var fetcher = new Fetcher();
+        // ...
+        fetcher.getResult(result);
+    }
+}
+```
+
+This allows to pass any `List` that can store a `FetchResult`.
+
+However, such code wont work:
+
+```java
+List<? extends CharSequence> list = new ArrayList<>();
+
+// ...
+
+list.add("hello world"); // error here, cannot add
+```
+
+However, a normal `List<CharSequence` will allow it.
