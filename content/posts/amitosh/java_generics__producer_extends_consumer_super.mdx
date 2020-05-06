@@ -6,7 +6,7 @@ author: 'amitosh'
 
 I do quite a lot of Java as part of the work I do at Gojek and one of the most
 helpful, but at times confusing part of the language is generics. Here I will be
-mentioning an interesting concept I recently came across -- PECS or "Producer
+mentioning an interesting concept I recently came across &mdash; PECS or "Producer
 Extends, Consumer Super"
 
 Generics in Java is invariant by default and is applied at compile-time. [Polymorphic][1]
@@ -20,15 +20,15 @@ This is useful in defining methods that accept collection types.
 
 - Use `? extends T` when the collection is "producing" items that you utilize. Like,
   iterating over all items of the collection. You only care if the items in list are
-  compatible with `T` (i.e, sub-classes of `T`). This is covariance -- narrowing of
+  compatible with `T` (i.e, sub-classes of `T`). This is covariance &mdash; narrowing of
   scope.
 - Use `super` when collection is "comnsuming" items. Like, an `copyToList` method
   that copies current results into a list which allows you to store objects of type
-  `T`. This is contra-variance -- widening of scope.
+  `T`. This is contra-variance &mdash; widening of scope.
 
 ## Example
 
-## ? extends T -- covariance
+## ? extends T &mdash; covariance
 
 You need to apply a `List` of `Rule` over a state machine. Here the `List` is a
 "producer".
@@ -65,7 +65,7 @@ class Main {
 
 This allows you to pass a `List` of any objects which are implementations of `Rule`
 
-## ? super T -- contra-variance
+## ? super T &mdash; contra-variance
 
 You need to store `FetchResult`s, a sub-type of `Result` into a `List`. Here the
 `List` is a "consumer".
@@ -107,4 +107,9 @@ List<? extends CharSequence> list = new ArrayList<>();
 list.add("hello world"); // error here, cannot add
 ```
 
-However, a normal `List<CharSequence` will allow it.
+However, a normal `List<CharSequence>` will allow it.
+
+### Footnotes
+1. _[Polymorphism (The Java&trade; Tutorials &gt; Learning the Java Language &gt; Interfaces and Inheritance)][1]_
+
+[1]: https://docs.oracle.com/javase/tutorial/java/IandI/polymorphism.html
