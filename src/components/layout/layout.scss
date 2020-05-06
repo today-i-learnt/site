@@ -15,6 +15,7 @@ body {
   font-family: 'IBM Plex Mono', 'Courier New', Courier, monospace;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
 }
 
 .heading {
@@ -40,10 +41,10 @@ header,
 main,
 footer {
   max-width: 64rem;
-  margin: 1rem;
+  padding: 1rem;
 
   @media (min-width: $width-md) {
-    margin: 2rem;
+    padding: 2rem;
   }
 
   @media (min-width: $width-lg) {
