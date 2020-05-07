@@ -17,10 +17,10 @@ don't have to remember complicated IP addresses 🤩.
 We are trying to open example.com on a browser. A Typical DNS lookup goes like
 this:
 
-1. The browser first looks up "example.com in its DNS cache. If it is present,
+1. The browser first looks up "example.com" in its DNS cache. If it is present,
    the browser uses the cached IP address and connects to "example.com". If not, then the browser goes to the next step.
-2. Browser issues a `gethostbyname (3)` and passes the responsibility of name resolution to the operating system (OS). The OS    now becomes the resolver
-3. OS looks for the domain name it the system DNS cache. If found then it
+2. Browser issues a `gethostbyname (3)` and passes the responsibility of name resolution to the operating system (OS). The OS    now becomes the resolver.
+3. OS looks for the domain name in the system DNS cache. If found then it
    returns the IP address to the browser else the OS goes to the next step.
 4. The OS looks into `\etc\hosts`, known as the hosts file. The hosts file is a
    method of maintaining hostname to IP address mapping from the ARPANET days. If an entry exists, the OS returns the IP          address else it goes to the next step.
