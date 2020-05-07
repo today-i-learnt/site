@@ -11,29 +11,22 @@ address called IP address. Though structured and thus great for computers, it is
 tough for humans to remember.
 
 DNS acts as the phonebook of the internet 🌐. It converts a web address such as
-"example.com" to an IP address, which computers use to connect, as a result, we
+"example.com" to an IP address, which computers use to connect. As a result, we
 don't have to remember complicated IP addresses 🤩.
 
 We are trying to open example.com on a browser. A Typical DNS lookup goes like
 this:
 
-1. The broswer first looks up "example.com in its DNS cache, if it is present,
-   the browser uses the cached IP address and connects to "example.com". If not
-   then the browser goes to the next step.
-2. Browser issues a `gethostbyname (3)` and passes the resposibility of name
-   resolution to the operating system (OS). The OS now becomes the resolver.
+1. The browser first looks up "example.com in its DNS cache. If it is present,
+   the browser uses the cached IP address and connects to "example.com". If not, then the browser goes to the next step.
+2. Browser issues a `gethostbyname (3)` and passes the responsibility of name resolution to the operating system (OS). The OS    now becomes the resolver
 3. OS looks for the domain name it the system DNS cache. If found then it
    returns the IP address to the browser else the OS goes to the next step.
 4. The OS looks into `\etc\hosts`, known as the hosts file. The hosts file is a
-   method of maintaining host name to IP address mapping from the ARPANET days. If
-   an entry exists the OS returns the IP address else it goes to the next step.
-5. The OS tries to connect to your configured DNS Servers and sends a DNS query
-   for "example.com". You can manually set your DNS Servers, or your connected
-   networks can configure it for you. The DNS server now becomes the resolver and
-   has to return a respose to the OS of the machine that has sent the DNS query.
-6. The DNS server (resolver) looks into its DNS cache for the host name. If it
-   finds an entry, it returns the same to the calling machine. Else it goes to the
-   next step.
+   method of maintaining hostname to IP address mapping from the ARPANET days. If an entry exists, the OS returns the IP          address else it goes to the next step.
+5. The OS tries to connect to your configured DNS Servers and sends a DNS query for "example.com". You can manually set your      DNS Servers, or your connected networks can configure it for you. The DNS server now becomes the resolver and has to return    a response to the OS of the machine that has sent the DNS query.
+6. The DNS server (resolver) looks into its DNS cache for the hostname. If it
+   finds an entry, it returns the same to the calling machine. Else it goes to the next step.
 7. The DNS server tries to connect to root nameserver (.) You can do `dig .` to
    find root nameserver your DNS server is trying to connect. At present, there are 13
    root nameservers named with the letters "a" to "m" &mdash; `a.root-servers.net.`
@@ -139,9 +132,7 @@ this:
     ;; MSG SIZE  rcvd: 828
 
     ```
-9. Then DNS server then requests one of the above root nameservers for the
-   authoritative nameserver for the domain `example.com`. This set of nameservers
-   actually host the addresses of the domain as well as any subdomains it may have.
+9. DNS server then requests one of the above root nameservers for the authoritative nameserver for the domain `example.com`.      This set of nameservers host the addresses of the domain as well as any subdomains it may have.
     ```
     ➜ dig @a.gtld-servers.net. -t NS example.com
 
