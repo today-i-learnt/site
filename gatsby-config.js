@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 module.exports = {
   siteMetadata: {
     title: `Today I Learnt`,
@@ -61,6 +63,13 @@ module.exports = {
       options: {
         fonts: ['IBM Plex Serif', 'IBM Plex Mono'],
         display: 'swap',
+      },
+    },
+    {
+      resolve: `gatsby-plugin-posthog-analytics`,
+      options: {
+        apiKey: process.env['POSTHOG_API_KEY'],
+        appHost: process.env['POSTHOG_HOST_URL'],
       },
     },
   ],
