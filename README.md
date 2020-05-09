@@ -1,5 +1,7 @@
 # Today I Learnt
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/335affff-800c-43e9-90de-a2c308d9ec26/deploy-status)](https://app.netlify.com/sites/today-i-learnt/deploys)
+
 _Let the world know about your learnings, moment of realization, or that
 fastastic production goof-up and how you saved the day!_
 
