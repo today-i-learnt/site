@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config()
 
 module.exports = {
   siteMetadata: {
@@ -69,7 +69,8 @@ module.exports = {
       resolve: `gatsby-plugin-posthog-analytics`,
       options: {
         apiKey: process.env['POSTHOG_API_KEY'],
-        appHost: process.env['POSTHOG_HOST_URL'],
+        apiHost: process.env['POSTHOG_HOST_URL'],
+        isEnabledDevMode: true,
       },
     },
   ],
