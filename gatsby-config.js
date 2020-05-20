@@ -4,8 +4,10 @@ module.exports = {
   siteMetadata: {
     title: `Today I Learnt`,
     description: `What did I learn today?`,
+    siteUrl: 'https://todayilearnt.xyz',
   },
   plugins: [
+    'gatsby-plugin-sitemap',
     'gatsby-plugin-sass',
     'gatsby-plugin-typescript',
     `gatsby-plugin-react-helmet`,
