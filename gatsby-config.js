@@ -12,15 +12,6 @@ module.exports = {
     'gatsby-plugin-typescript',
     `gatsby-plugin-react-helmet`,
     {
-      resolve: `gatsby-source-filesystem`,
-      options: {
-        name: `images`,
-        path: `${__dirname}/src/images`,
-      },
-    },
-    `gatsby-remark-images`,
-    `gatsby-plugin-sharp`,
-    {
       resolve: `gatsby-plugin-manifest`,
       options: {
         name: `Today I Learnt`,
@@ -31,6 +22,8 @@ module.exports = {
         display: `minimal-ui`,
       },
     },
+    `gatsby-remark-images`,
+    `gatsby-plugin-sharp`,
     {
       resolve: `gatsby-plugin-mdx`,
       options: {

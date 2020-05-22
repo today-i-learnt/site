@@ -1,0 +1,63 @@
+---
+title: 'Integration Test: How and When?'
+date: '2020-05-22T09:40:54.898Z'
+author: 'amitosh'
+---
+
+While writing code, we often write tests side by side. Ideally, tests should
+cover all the branches of your system, and any unwarranted modification should
+cause a test failure. To ascertain the correctness of our code, we rely on Unit
+tests and Integration tests.
+
+What is an integration test?
+
+An integration test tests whether a combined (integrated) set of modules in a
+codebase work as expected. You can define integration tests for a module (for
+monoliths) or even for the entire service, if possible (in case of microservices).
+
+## Difference between unit tests and integration tests
+
+![Testing Pyramid](../img/testing_pyramid.png)
+
+A unit test involves testing a "unit" of code for its behavior isolated from
+everything else; a unit can be a class or a method, or a module &mdash; the
+definition is up to you.
+
+Unit tests use mocks, spies, and test doubles extensively so that only the
+component under test is the actual live code running while integration tests
+execute almost all of the service/module code.
+
+## What to cover in an integration test?
+
+Your integration tests should cover any externally exposed public interface. It
+gives you the confidence to refactor internal implementation detail at a later
+point and quickly know if it broke an exposed behavior.
+
+## How?
+
+There are two schools of thought about integration tests -
+
+1. The "Broad Integration Test" &mdash; Testing your module with live versions
+of all dependencies.
+2. The "Narrow Integration Test" &mdash; Testing your module with a test double
+of your dependencies.
+
+The former is also commonly called as an end-to-end test. It tests your module
+against running
+instances of the module's dependencies after deploying it in a test environment.
+
+The one I am writing here is the latter. Integration tests using test doubles are
+fast and lean enough to be integrated into your build pipeline using the same
+set of tools and frameworks you use for writing your unit tests. For example,
+without any other tools other than JUnit and WireMock, you can write an
+integration test for a Java service talking to several other REST services.
+
+Your integration tests should cover all the expectations from your API like:
+
+1. Request validations
+2. Error handling on the failure of dependent modules
+3. Any locking, concurrency or idempotency guarantees your module provides
+
+Test em' all!
+
+![May the source be with you](../img/may_the_source_be_with_you.png)
