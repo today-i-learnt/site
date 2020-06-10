@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { Link } from 'gatsby'
+import logo from './logo.svg'
 import useSiteMetadata from '../../hooks/use-site-metadata'
 
 import './header.scss'
@@ -10,12 +11,9 @@ const Header = () => {
 
   return (
     <header>
-      <h1 className="heading">
         <Link to="/" title={`${title} - Back to home`}>
-          {title}
+          <img className="logo" src={logo} alt={title} />
         </Link>
-      </h1>
-      {/* <ColorModeToggle isDark={isDark} toggle={toggleColorMode} /> */}
     </header>
   )
 }

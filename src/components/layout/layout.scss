@@ -1,4 +1,4 @@
-$width-md: 640px;
+$width-md: 40rem;
 $width-lg: 48rem;
 
 html,
@@ -29,6 +29,7 @@ body {
 /* Global styles */
 
 a {
+  cursor: pointer;
   text-decoration: none;
   color: inherit;
 
