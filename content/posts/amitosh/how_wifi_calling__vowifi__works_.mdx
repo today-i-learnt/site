@@ -1,0 +1,143 @@
+---
+title: 'How WiFi Calling 📞 (VoWiFi) works?'
+date: '2020-06-11T21:54:53.023Z'
+author: 'amitosh'
+---
+Some time last year, Reliance Jio and AirTel enabled Wifi Calling (Voice over
+WiFi) for their customers. It was great news for someone like me who always had
+frequent call drops as I stay in a dense apartment complex. LTE signal is too
+weak to penetrate so many walls (technically speaking, they reflect and diffract
+like the phenomena in Young's double-slit experiment).
+
+However, WiFi calling by my carrier Jio behaved interestingly, if I set
+my router's DNS to Cloudflare or Google Public DNS, it doesn't work. This piqued
+my interest, I put on my hat and opened my "Mobile Computing" book which I read
+ages ago &mdash; "GSM and LTE networks". And after a little Google search on "VoWiFi
+call flow" enlightened me with much details (details below).
+
+## EDGE, WCDMA, LTE and VoLTE
+
+Cellular networks operate in circuit-switched mode or packet-switched mode.
+The circuit-switched mode is synchronous and optimized for low latency communication
+such as phone calls. Packet-switched media is suitable for bursty communications
+such as mobile internet.
+
+Early mobile networks ☎️ were circuit-switched only (similar to fixed phones). GPRS
+(2G) introduced packet-switched network access enabling services like MMS, WAP
+and mobile internet. The phones switched between circuit-switched when taking
+calls and packet-switched when browsing the internet. This was the reason why you
+could not talk and browse the internet on GPRS networks.
+
+WCDMA (3G) continued with the same dual-mode approach as well with the
+enhancement that phones now could use both modes simultaneously allowing calls
+along with internet access.
+
+LTE 📱 or 4G network is a purely packet-based network. Circuit-switched calls were
+an expensive legacy, a power-hungry relic of the past (think about 2 antennas) and
+everyone wanted to get rid of it. However, in some carriers only
+circuit-switched networks are available for calling, they force your phone to
+degrade to WCDMA (thus eating more battery as you need 2 different antennas
+again!). Some maintain for compatibility reasons and to provide a fallback
+network (2G reaches everywhere!). Reliance Jio famously doesn't.
+
+Thus Voice over LTE (VoLTE) was born. It uses a bunch of IP (internet protocol)
+telephony network protocols such as SIP and RTMP, which is quite similar to the
+protocols used in voice and video calling applications (WhatsApp, Viber, Skype
+etc). Your phone connects to a telephony gateway called IMS (IP Multimedia
+Services) which is routed to the PSTN (Public Switched Telephony Network)
+allowing you to make calls. This communication happens directly over the LTE network
+from your device to a system run by your carrier called Packet Data Gateway (PDG)
+which bridges you to the IMS and IP (Internet) networks.
+
+## VoWiFi
+
+Since everything is running on standard IP based communication, it was easy to
+provide the same set of IMS services over a different IP based access network --
+your WiFi. VoWiFi is simply a connection to your carrier's IMS over the public
+internet.
+
+Your mobile now connects to another server called an Evolved Packet Data Gateway
+(ePDG) which connects you to the PDG and subsequently the IMS and PSTN. LTE
+networks are secure and encrypted while public internet is not. Hence, to
+provide security, the communication to ePDG happens over an IPSec tunnel.
+
+Since ePDG is just an IPSec server, it's IP address is resolved by a DNS query
+`epdg.epc.mnc<MCC>.mcc<MCC>.pub.3gppnetwork.org` where MNC and MCC is the network
+and carrier code respectively. You can find those codes by looking up in Android
+network info.
+
+## What do Jio and AirTel do and why doesn't it work on my WiFi
+
+Doing a DNS query for `epdg.epc.mnc861.mcc405.pub.3gppnetwork.org` (this is for
+Jio Karnataka) or `epdg.epc.mnc45.mcc404.pub.3gppnetwork.org.` (this is for
+AirTel) over a Public DNS server like Google DNS (8.8.8.8) or Cloudflare
+(1.1.1.1) will return a blackhole server. It will not connect. Since my ISP's
+DNS was very unreliable, I had set my router to use Cloudflare DNS. VoWiFi didn't
+work at all. My phone repeatedly tried to connect to the blackhole server
+draining battery forever.
+
+```
+$ dig epdg.epc.mnc861.mcc405.pub.3gppnetwork.org
+
+; <<>> DiG 9.10.6 <<>> epdg.epc.mnc861.mcc405.pub.3gppnetwork.org
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 53335
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1452
+;; QUESTION SECTION:
+;epdg.epc.mnc861.mcc405.pub.3gppnetwork.org. IN A
+
+;; ANSWER SECTION:
+epdg.epc.mnc861.mcc405.pub.3gppnetwork.org. 5 IN A 49.45.63.1
+epdg.epc.mnc861.mcc405.pub.3gppnetwork.org. 5 IN A 49.45.63.2
+
+;; Query time: 52 msec
+;; SERVER: 1.1.1.1#53(1.1.1.1)
+;; WHEN: Fri Jun 12 04:21:18 IST 2020
+;; MSG SIZE  rcvd: 145
+```
+
+However, one day I changed my DNS to use ISP's DNS. VoWiFi connected instantly.
+Strange. Upon digging I found that _the response to the above DNS queries was
+different_. I don't know why.
+
+```
+$ dig @192.168.0.1 epdg.epc.mnc861.mcc405.pub.3gppnetwork.org
+
+; <<>> DiG 9.10.6 <<>> @192.168.0.1 epdg.epc.mnc861.mcc405.pub.3gppnetwork.org
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 61133
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+;; QUESTION SECTION:
+;epdg.epc.mnc861.mcc405.pub.3gppnetwork.org. IN A
+
+;; ANSWER SECTION:
+epdg.epc.mnc861.mcc405.pub.3gppnetwork.org. 0 IN A 49.44.59.36
+epdg.epc.mnc861.mcc405.pub.3gppnetwork.org. 0 IN A 49.44.59.38
+
+;; Query time: 35 msec
+;; SERVER: 192.168.0.1#53(192.168.0.1)
+;; WHEN: Fri Jun 12 04:20:40 IST 2020
+;; MSG SIZE  rcvd: 103
+```
+
+Possibly because these carriers do not want to give away free international
+roaming, they have set up custom DNS zone files with each of the major ISPs in
+India. Sadly for me, I now either have an option to drop calls (without VoWiFi)
+or slow internet (with ISPs DNS).
+
+But thankfully, [DNS works in surprising ways as well](/posts/nancy/dns_resolution/)!
+I edited the `hosts` file on my router with manual DNS entries for my carrier's ePDG gateways.
+It's a hack but it works until my carrier changes their ePDG gateway servers!
+
+
+1. [IMS VoLTE Architecture](http://www.3glteinfo.com/ims-volte-architecture/)
+2. [VoWiFi Overview](https://realtimecommunication.wordpress.com/2016/02/11/vowifi-overview/)

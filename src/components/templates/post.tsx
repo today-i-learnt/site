@@ -26,7 +26,7 @@ export default function PostTemplate({ data: { post, author } }: PostProps) {
         <SEO
           title={meta.title}
           description={post.excerpt}
-          // image={meta.banner ? meta.banner.childImageSharp.resize.src : undefined}
+          image={meta.banner ? meta.banner.childImageSharp.resize.src : undefined}
           pathname={post.fields.slug}
         />
         <h2>{meta.title}</h2>
