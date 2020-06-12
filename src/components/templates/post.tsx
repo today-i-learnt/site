@@ -1,5 +1,6 @@
 import React from 'react'
 import { MDXRenderer } from 'gatsby-plugin-mdx'
+import { Disqus, CommentCount } from 'gatsby-plugin-disqus'
 import Layout from '../layout/layout'
 import ItemTags from '../blog/item-tags'
 import SEO from '../seo/seo'
@@ -9,6 +10,7 @@ import { formatDateForMeta } from '../../utils/dates'
 
 import './post.scss'
 import Copyright from '../library/copyright'
+import useSiteMetadata from '../../hooks/use-site-metadata'
 
 type PostProps = {
   data: {
@@ -20,21 +22,30 @@ type PostProps = {
 export default function PostTemplate({ data: { post, author } }: PostProps) {
   const meta = { ...post.fields, ...post.frontmatter }
 
+  const { siteUrl } = useSiteMetadata()
+
+  let disqusConfig = {
+    url: `${siteUrl}${location.pathname}`,
+    identifier: post.id,
+    title: meta.title,
+  }
+
   return (
     <Layout className="post">
       <article title="article">
         <SEO
           title={meta.title}
           description={post.excerpt}
-          image={meta.banner ? meta.banner.childImageSharp.resize.src : undefined}
           pathname={post.fields.slug}
         />
         <h2>{meta.title}</h2>
         <div className="secondary">
-          Posted by <Link to={`/authors/${meta.author}`}>{meta.author}</Link> on{' '}
-          <time dateTime={meta.date}>{formatDateForMeta(meta.date)}</time>
-          {post.timeToRead && ` — `}
-          {post.timeToRead && <span>{post.timeToRead} min read</span>}
+          <span>
+            Posted by <Link to={`/authors/${meta.author}`}>{meta.author}</Link> on{' '}
+            <time dateTime={meta.date}>{formatDateForMeta(meta.date)}</time>
+          </span>
+          <span className="time-to-read">{post.timeToRead && ` — ${post.timeToRead} min read`}</span>
+          <CommentCount  className="comment-count" config={disqusConfig} placeholder={'...'} />
         </div>
         {meta.tags && (
           <p>
@@ -53,6 +64,9 @@ export default function PostTemplate({ data: { post, author } }: PostProps) {
         <p className="copyright secondary">
           <Copyright name={author.name} /> Content available under CC-BY 4.0
         </p>
+      </section>
+      <section className="comments">
+        <Disqus config={disqusConfig} />
       </section>
     </Layout>
   )

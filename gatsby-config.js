@@ -68,5 +68,11 @@ module.exports = {
         isEnabledDevMode: true,
       },
     },
+    {
+      resolve: 'gatsby-plugin-disqus',
+      options: {
+        shortname: 'today-i-learnt-1',
+      },
+    },
   ],
 }

@@ -11,6 +11,18 @@
       }
     }
 
+    .secondary{
+      display: flex;
+
+      .time-to-read {
+        margin-left: 1rem;
+      }
+
+      .comment-count {
+        margin-left: auto;
+      }
+    }
+
     .content {
       text-align: justify;
       a {
