@@ -25,7 +25,7 @@ export default function PostTemplate({ data: { post, author } }: PostProps) {
   const { siteUrl } = useSiteMetadata()
 
   let disqusConfig = {
-    url: `${siteUrl}${location.pathname}`,
+    url: `${siteUrl}${meta.slug}`,
     identifier: post.id,
     title: meta.title,
   }
