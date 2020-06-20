@@ -1,0 +1,48 @@
+---
+title: 'How does your router store your network settings?'
+date: '2020-06-20T19:31:15.808Z'
+author: 'amitosh'
+---
+
+You configure your router with your WiFi SSID and password and a bunch of other
+settings. You will be surprised to know how your router stores the
+data.
+
+While I was busy [hacking my router][1] to edit my `/etc/hosts` over telnet, I
+realised my router has volatile storage! In technical words, my router (as so is
+yours) is running from a RAM disk overlayed over a read-only filesystem. This
+means any changes to the filesystem gets lost after a reboot. Think of your
+router booting off a live CD each time it starts-up.
+
+Most consumer routers run some version of embedded Linux, running on either ARM
+or MIPS CPUs. They have little RAM and flash memory, and most of it is merely
+read-only. Check if your router provides telnet (most likely it does). If yes,
+you can telnet to your router IP and check what's inside _without fear_ as any
+modifications you make will be lost after a reboot.
+
+## How does it store state?
+
+But it stores state! Right? Yes. I assumed it's some folder or file inside
+`/etc/hosts` but it's more complicated than that. Read-only flash memory (ROM)
+is cheap. Embedded devices employ some variants of EEPROM (Electrically Erasable
+Programmable Read-Only Memory) with a tiny amount of NV-RAM (Nonvolatile Random
+Access Memory) to store data. These NV-RAM are capable of storing a few KB of
+read-write memory in the form of key-value pairs. Your router stores all its
+settings in this memory.
+
+But Linux software such as iptables and dnsmasq expects configuration to be
+present under `/etc/`. Without any requisite configuration present under those
+files, they will refuse to start! So to fix this, routers mount their filesystem
+using an OverlayFS (a mechanism to combine two file systems so that they appear
+as one) with a RO base read from the ROM and a small RAM disk mounted as the
+writable layer. As part of the early-init process, the values are loaded from
+NV-RAM and written to appropriate files under `/etc` like `/etc/hosts`.
+
+## Who updates the NV-RAM?
+
+As you guessed, the configuration tool does. If you have shell access to your
+router, you can also make use of the `nvram` command to read and write values
+from the NV-RAM. The configuration tools are usually written in C and may
+directly access NV-RAM as well.
+
+[1]: /posts/amitosh/how_wifi_calling__vowifi__works_/
