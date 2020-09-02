@@ -1,0 +1,43 @@
+---
+title: 'Github Container Registry'
+date: '2020-09-02T07:37:14.073Z'
+author: 'nancy'
+---
+
+Recently Github has made [GitHub Container Registry](https://github.blog/2020-09-01-introducing-github-container-registry/) free for public images.🤩
+Easy to manage and easy to maintain! 
+It has become super easy to push your 🐳 Docker images now. I recently worked on pushing one the docker image at my organisation and want to share a simple
+guide with you all. Here we go! 
+
+## Authentication 
+
+- Create a new personal access token (PAT) with following scopes :
+    - read:packages 
+    - write:packages 
+    - delete:packages
+- Type this in your terminal: 
+    - `export CR_PAT=YOUR_TOKEN` 
+    - `echo $CR_PAT | docker login ghcr.io -u USERNAME --password-stdin` 
+
+## Docker build and Push 
+
+After authenticating build the docker image and push it!
+
+Example : 
+- `docker build -t ghcr.io/nancy-chauhan/keystore:latest .`
+- `docker push ghcr.io/nancy-chauhan/keystore:latest` 
+
+![Example](../img/github_registry.png)
+
+Now if you are working for an organisation where you have a lot
+of private repositories. You can setup container registry to host your internal
+docker images. You can enforce access policies to control who can do what.
+Here is a consolidated list arranged by me, which you can refer 
+and can quickly set up things. 
+
+References : 
+
+- [Set up GitHub container registry for your org] (https://docs.github.com/en/packages/getting-started-with-github-container-registry/enabling-github-container-registry-for-your-organization)
+- [Configuring access control and visibility for container images] (https://docs.github.com/en/packages/managing-container-images-with-github-container-registry/configuring-access-control-and-visibility-for-container-images)
+
+Thank you for reading! 
