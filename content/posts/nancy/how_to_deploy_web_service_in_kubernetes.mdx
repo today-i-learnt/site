@@ -1,0 +1,19 @@
+---
+title: 'How to deploy Web Service in Kubernetes'
+date: '2020-12-07T13:06:18.069Z'
+author: 'nancy'
+---
+
+Easy steps to start with deploying a Web Service in Kubernetes:
+
+1. Make a docker image of your application
+2. Push to docker registry 
+3. Make a `deployment.yaml`
+
+    It describes how pods will run; We will configure env variables here. 
+4. To store application settings create one or more `configmap`.
+5. To store one or more secrets create one or multiple secret.yaml and link it with `deployment.yaml`.
+6. For one-off tasks such as migration, certificate renewal, etc. make one or more jobs.
+7. To expose your web application, create a Service.
+8. To make it available to public use Loadbalancer type Service.
+9. Alternatively if you have ingress configure it to expose your service as well.  
