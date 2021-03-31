@@ -61,14 +61,6 @@ module.exports = {
       },
     },
     {
-      resolve: `gatsby-plugin-posthog-analytics`,
-      options: {
-        apiKey: process.env['POSTHOG_API_KEY'],
-        apiHost: process.env['POSTHOG_HOST_URL'],
-        isEnabledDevMode: true,
-      },
-    },
-    {
       resolve: 'gatsby-plugin-disqus',
       options: {
         shortname: 'today-i-learnt-1',
