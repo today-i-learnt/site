@@ -1,0 +1,78 @@
+---
+title: 'Meaningful Application Healthchecks'
+date: '2021-03-31 10:48:11+05:30'
+author: 'amitosh'
+---
+
+Healthchecks are essential to signal whether a service is up and running normally.
+In a microservices-based architecture, health checks are used to discover healthy
+service instances. It is vital to have an accurate health check indicator for the
+reliability of our applications.
+
+A client-library, load-balancer, or service discovery co-ordinator (such as consul)
+takes care of periodically checking each instance's health. When connecting to the
+service, the library or load-balancer checks the instances' status and binds only
+to healthy service instances. A monitoring service may also rely on the health
+indicator to fire-off alerts.
+
+## How to design meaningful application health checks
+
+Your application health check should be a boolean function &mdash; whether healthy
+or not. If your application X depends on A, B, Y, Z for each and every operation,
+where each of them may be databases or other microservices, then the health of X
+H(X) should be the aggregate of the health of A, B, Y, and Z. More formally,
+
+H(X) = H(A) & H(B) & H(Y) & H(Z)
+
+### Partial functioning and optional dependencies
+
+In a health check, only include the mandatory dependencies. For example, if X
+uses A only for a few functions and can provide functionality if A is down, then
+we can exclude it from being a mandatory part of the health check.
+
+H(X) = H(A) | H(B) & H(Y) & H(Z)
+
+Ideally, you should have a fallback strategy if A is unavailable.
+
+## Implementing Healthchecks
+
+You can define a health check endpoint, say (`/healthcheck`) for a rest service.
+Simply blindly returning 200 is a reachability indicator and not a health check.
+The success should be an indicator of whether the service instance can process
+requests.
+
+1.  Returns a 200 response when the service is healthy and can serve traffic.
+2. Return 503 is service is unavailable deliberately. This is useful for
+scenarios like graceful shutdown and planned restart.
+4. Return 500 if the health check fails due to a dependent health check.
+
+### Determining the health check status
+
+1. Determine the status of each of the dependent services and external APIs. If
+the dependent service is another microservice, you can call it's `/healthcheck`
+However, this may cause an explosion of health check traffic. You can query a
+service discovery co-ordinator (such as consul) or the application load-balancer
+(if it uses one) to determine the overall health of the microservice. You can
+also consider a TTL, for example, if B's health check passed within the last 5
+minutes, assume B to be healthy.
+2. For SQL databases, you can use a ping query such as `SELECT 1`. This helps
+you to determine reachability. You can also use database-specific readiness
+SQL queries as well.
+3. Redis and other databases also offer similar `PING` functionality.
+
+## Using health checks
+
+You can configure the health check endpoints in load-balancers and service
+discover co-ordinator to discover healthy instances and route traffic.
+
+If you are using Kubernetes, you can configure [liveliness and readiness probes][1].
+This signals Kubernetes to not send traffic until the pods have started
+successfully. If the probe fails, Kubernetes can restart the application.
+
+Many frameworks come with libraries that can assist you in implementing them.
+Spring has an actuator that automatically configures a lot of health checks.
+
+[1]:https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-conditions
+
+
+
